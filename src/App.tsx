@@ -15,7 +15,7 @@ const App = () => {
   function handleAdd() {
     const newList = [...list];
     newList.push({
-      id: list.length,
+      id: list[list.length - 1].id + 1,
       destination: "Madrid",
       dateStart: "13.12.2005",
       dateEnd: "15.12.2005",
