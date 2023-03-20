@@ -1,5 +1,6 @@
 import React from "react";
 import Items from "./Items";
+import { IconTrash } from "@tabler/icons-react";
 
 const Trip = (props) => {
   return (
@@ -14,6 +15,8 @@ const Trip = (props) => {
         justifyContent: "left",
         flexDirection: "column",
         boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
+        alignSelf: "flex-start",
+        marginBottom: "30px",
       }}
     >
       <p
@@ -31,7 +34,7 @@ const Trip = (props) => {
             fontWeight: "bolder",
           }}
         >
-          {props.destination}
+          {props.destination} <IconTrash onClick={() => props.onClick()} />
         </span>
         <span style={{ opacity: "40%" }}>
           {props.dateStart} - {props.dateEnd}
