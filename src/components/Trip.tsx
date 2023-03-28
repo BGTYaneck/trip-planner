@@ -2,7 +2,15 @@ import React from "react";
 import Items from "./Items";
 import { IconTrash } from "@tabler/icons-react";
 
-const Trip = (props) => {
+type Props = {
+  destination: string;
+  dateStart: string;
+  dateEnd: string;
+  persons: { person: string; items: string[] }[];
+  onClick: Function;
+};
+
+const Trip = (props: Props) => {
   return (
     <div
       style={{

@@ -1,6 +1,11 @@
 import React from "react";
 
-const Items = (props) => {
+type Props = {
+  personName: string;
+  itemsList: string[];
+};
+
+const Items = (props: Props) => {
   return (
     <div
       style={{
@@ -10,7 +15,7 @@ const Items = (props) => {
       <p style={{ fontWeight: "bold", marginBottom: "-5px" }}>
         {props.personName}
       </p>
-      {props.itemsList.map((item, index) => {
+      {props.itemsList.map((item: string, index: any) => {
         return (
           <span key={index} className="text-capitalize">
             {(index ? ", " : "") + item}

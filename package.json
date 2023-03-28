@@ -13,12 +13,17 @@
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.3",
     "bootstrap": "^5.2.3",
+    "formik": "^2.2.9",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.7.2",
+    "react-datepicker": "^4.10.0",
     "react-dom": "^18.2.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
+    "@types/react-datepicker": "^4.10.0",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",
     "vite": "^4.1.0"
