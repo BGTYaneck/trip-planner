@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Formik, Field, Form, ErrorMessage, useField } from "formik";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import DatePicker from "react-datepicker";
 import Modal from "react-bootstrap/Modal";
 import "./App.css";
 import Trip from "./components/Trip";
@@ -45,6 +47,39 @@ const App = () => {
     setList(sortedTrips);
   }
 
+  const validationSchema = Yup.object({
+    destination: Yup.string()
+      .required("Field required!")
+      .max(32, "Destination name too long!"),
+    dateStart: Yup.date()
+      .typeError("Please enter a valid date!")
+      .required("This field is required!")
+      .min("2023-01-01", "Too early!!"),
+    dateEnd: Yup.date()
+      .typeError("Please enter a valid date!")
+      .required("This field is required!")
+      .min("2023-01-01", "Too early!"),
+  });
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmitHandler = (data: any) => {
+    handleAdd(
+      data.destination,
+      data.dateStart.toLocaleDateString(),
+      data.dateEnd.toLocaleDateString()
+    );
+    reset();
+  };
+
   return (
     <div
       style={{
@@ -62,92 +97,52 @@ const App = () => {
           <Modal.Title>Add a trip</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Formik
-            initialValues={{ destination: "", dateStart: "", dateEnd: "" }}
-            validationSchema={Yup.object({
-              destination: Yup.string()
-                .required("Field required!")
-                .max(32, "Destination name too long!"),
-              dateStart: Yup.date()
-                .typeError("Please enter a valid date!")
-                .required("This field is required!")
-                .min("2023-01-01", "To early!!"),
-              dateEnd: Yup.date()
-                .typeError("Please enter a valid date!")
-                .required("This field is required!")
-                .min("2023-01-01", "Too early!"),
-            })}
-            onSubmit={(values) =>
-              handleAdd(values.destination, values.dateStart, values.dateEnd)
-            }
-          >
-            <div>
-              <div style={{ margin: "20px" }}>
-                <label htmlFor="destination">Destination</label>
-                <Field
-                  type="text"
-                  id="destination"
-                  name="destination"
-                  placeholder="Destination..."
-                  style={{
-                    background: "white",
-                    color: "black",
-                    width: "100%",
-                  }}
+          <form onSubmit={handleSubmit(onSubmitHandler)}>
+            <div className="d-flex flex-column">
+              <label htmlFor="destination">Destination: </label>
+              <input
+                className=""
+                {...register("destination")}
+                type="text"
+                required
+              />
+              <p>{errors.destination?.message?.toString()}</p>
+              <br />
+            </div>
+            <div className="d-flex justify-content-evenly">
+              <div className="d-flex flex-column">
+                <input
+                  className="bg-white text-black border-1"
+                  {...register("dateStart")}
+                  type="date"
+                  required
                 />
-                <ErrorMessage name="destination" />
+                <p>{errors.dateStart?.message?.toString()}</p>
               </div>
-              <div>
-                <div className="d-flex flex-column">
-                  <label htmlFor="start-date">Start Date</label>
-                  <Field
-                    id="start-date"
-                    name="dateStart"
-                    placeholder="dd.mm.yyyy"
-                    style={{
-                      background: "white",
-                      color: "black",
-                      width: "100%",
-                    }}
-                  />
-                  <ErrorMessage name="dateStart" />
-                </div>
-
-                <div className="d-flex flex-column">
-                  <label htmlFor="end-date">End date</label>
-                  <Field
-                    id="end-date"
-                    name="dateEnd"
-                    placeholder="dd.mm.yyyy"
-                    style={{
-                      background: "white",
-                      color: "black",
-                      width: "100%",
-                    }}
-                  />
-                  <ErrorMessage name="dateEnd" />
-                </div>
+              <div className="d-flex flex-column">
+                <input {...register("dateEnd")} type="date" required />
+                <p>{errors.dateEnd?.message?.toString()}</p>
               </div>
             </div>
-          </Formik>
+            <div className="d-flex justify-content-evenly">
+              <button
+                onClick={() => handleClose()}
+                style={{
+                  color: "black",
+                  backgroundColor: "white",
+                }}
+              >
+                Close
+              </button>
+              <button type="submit">Confirm</button>
+            </div>
+          </form>
         </Modal.Body>
-        <Modal.Footer>
-          <button
-            onClick={() => handleClose()}
-            style={{
-              color: "black",
-              backgroundColor: "white",
-            }}
-          >
-            Close
-          </button>
-          <button type="submit"> Confirm</button>
-        </Modal.Footer>
       </Modal>
 
       <div className="d-flex flex-row gap-5 center">
-        <span className="text-lg">My Trips</span>
-        <button onClick={() => handleShow()}>Add a trip +</button>
+        <span className="btn btn-lg">My Trips</span>
+        <button onClick={() => handleShow()}>Add a Trip +</button>
       </div>
       <div>
         {list == null
