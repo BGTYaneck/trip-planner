@@ -12,21 +12,7 @@ type Props = {
 
 const Trip = (props: Props) => {
   return (
-    <div
-      style={{
-        background: "#F7F7F9",
-        width: "400px",
-        borderRadius: "5px",
-        minHeight: "200px",
-        padding: "1%",
-        display: "flex",
-        justifyContent: "left",
-        flexDirection: "column",
-        boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
-        alignSelf: "flex-start",
-        marginBottom: "30px",
-      }}
-    >
+    <div className="card">
       <p
         style={{
           display: "flex",

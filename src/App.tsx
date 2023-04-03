@@ -7,7 +7,6 @@ import Trip from "./components/Trip";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import tripData from "./data/tripData";
 import * as Yup from "yup";
-import parse from "date-fns/parse";
 
 const App = () => {
   const [list, setList] = useState<tripData[]>(
@@ -70,24 +69,10 @@ const App = () => {
                 .required("Field required!")
                 .max(32, "Destination name too long!"),
               dateStart: Yup.date()
-                .transform(function (value, originalValue) {
-                  if (this.isType(value)) {
-                    return value;
-                  }
-                  const result = parse(originalValue, "dd.MM.yyyy", new Date());
-                  return result;
-                })
                 .typeError("Please enter a valid date!")
                 .required("This field is required!")
                 .min("2023-01-01", "To early!!"),
               dateEnd: Yup.date()
-                .transform(function (value, originalValue) {
-                  if (this.isType(value)) {
-                    return value;
-                  }
-                  const result = parse(originalValue, "dd.MM.yyyy", new Date());
-                  return result;
-                })
                 .typeError("Please enter a valid date!")
                 .required("This field is required!")
                 .min("2023-01-01", "Too early!"),
@@ -112,16 +97,8 @@ const App = () => {
                 />
                 <ErrorMessage name="destination" />
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: "10px",
-                  margin: "20px",
-                }}
-              >
-                <div style={{ display: "flex", flexDirection: "column" }}>
+              <div>
+                <div className="d-flex flex-column">
                   <label htmlFor="start-date">Start Date</label>
                   <Field
                     id="start-date"
@@ -135,7 +112,8 @@ const App = () => {
                   />
                   <ErrorMessage name="dateStart" />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
+
+                <div className="d-flex flex-column">
                   <label htmlFor="end-date">End date</label>
                   <Field
                     id="end-date"
@@ -167,19 +145,11 @@ const App = () => {
         </Modal.Footer>
       </Modal>
 
-      <p style={{ display: "flex", gap: "20px" }}>
-        <span style={{ fontSize: "2rem", fontWeight: "bolder" }}>My trips</span>
-        <button onClick={() => handleShow()}>Add a trip + </button>
-      </p>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          gap: "5rem",
-          justifyContent: "center",
-        }}
-      >
+      <div className="d-flex flex-row gap-5 center">
+        <span className="text-lg">My Trips</span>
+        <button onClick={() => handleShow()}>Add a trip +</button>
+      </div>
+      <div>
         {list == null
           ? ""
           : list.map((item: tripData, i: any) => {
