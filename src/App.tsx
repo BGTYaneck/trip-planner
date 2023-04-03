@@ -23,6 +23,13 @@ const App = () => {
     localStorage.setItem("data", JSON.stringify(list));
   }, [list]);
 
+  function sortTrips(tripsToSort: tripData[]) {
+    const sortedTrips = tripsToSort.sort(
+      (a, b) => Date.parse(b.dateStart) - Date.parse(a.dateStart)
+    );
+    setList(sortedTrips);
+  }
+
   function handleAdd(dest: string, start: string, end: string) {
     const newList = [...list];
     newList.push({
@@ -38,13 +45,6 @@ const App = () => {
   function handleRemove(id: Number) {
     const newList = list.filter((item: tripData) => item.id !== id);
     sortTrips(newList);
-  }
-
-  function sortTrips(tripsToSort: tripData[]) {
-    const sortedTrips = tripsToSort.sort(
-      (a, b) => Date.parse(b.dateStart) - Date.parse(a.dateStart)
-    );
-    setList(sortedTrips);
   }
 
   const validationSchema = Yup.object({
@@ -63,7 +63,6 @@ const App = () => {
 
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
     reset,
@@ -81,17 +80,7 @@ const App = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        marginLeft: "auto",
-        marginRight: "auto",
-        height: "100vh",
-        flexDirection: "column",
-        gap: "15px",
-      }}
-    >
+    <div className="d-flex flex-column mx-auto gap-3 w-75">
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add a trip</Modal.Title>
@@ -101,7 +90,8 @@ const App = () => {
             <div className="d-flex flex-column">
               <label htmlFor="destination">Destination: </label>
               <input
-                className=""
+                className="bg-white text-black border-1"
+                placeholder="Destination name..."
                 {...register("destination")}
                 type="text"
                 required
@@ -110,7 +100,8 @@ const App = () => {
               <br />
             </div>
             <div className="d-flex justify-content-evenly">
-              <div className="d-flex flex-column">
+              <div className="d-flex flex-column align-items-center">
+                <label htmlFor="dateStart">Start date: </label>
                 <input
                   className="bg-white text-black border-1"
                   {...register("dateStart")}
@@ -119,7 +110,9 @@ const App = () => {
                 />
                 <p>{errors.dateStart?.message?.toString()}</p>
               </div>
-              <div className="d-flex flex-column">
+              -
+              <div className="d-flex flex-column align-items-center">
+                <label htmlFor="dateEnd">Finish date: </label>
                 <input {...register("dateEnd")} type="date" required />
                 <p>{errors.dateEnd?.message?.toString()}</p>
               </div>
@@ -140,11 +133,18 @@ const App = () => {
         </Modal.Body>
       </Modal>
 
-      <div className="d-flex flex-row gap-5 center">
-        <span className="btn btn-lg">My Trips</span>
+      <div className="d-flex flex-row gap-5 align-self-center">
+        <span
+          className="btn btn-lg"
+          onClick={() => {
+            sortTrips(list);
+          }}
+        >
+          My Trips
+        </span>
         <button onClick={() => handleShow()}>Add a Trip +</button>
       </div>
-      <div>
+      <div className="d-flex flex-column gap-2">
         {list == null
           ? ""
           : list.map((item: tripData, i: any) => {
