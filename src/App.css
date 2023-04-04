@@ -6,4 +6,12 @@
   color: #2b2d42;
 }
 
+.clickIcon:hover {
+  cursor: pointer;
+}
+
+.errorText {
+  color: red;
+  font-size: 14px;
+}
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");

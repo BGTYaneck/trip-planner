@@ -1,35 +1,38 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import DatePicker from "react-datepicker";
-import Modal from "react-bootstrap/Modal";
-import "./App.css";
-import Trip from "./components/Trip";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import Modal from "react-bootstrap/Modal";
 import tripData from "./data/tripData";
+import Trip from "./components/Trip";
 import * as Yup from "yup";
+import "./App.css";
 
 const App = () => {
   const [list, setList] = useState<tripData[]>(
     JSON.parse(localStorage.getItem("data")!) ?? []
   );
   const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   useEffect(() => {
     localStorage.setItem("data", JSON.stringify(list));
   }, [list]);
 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  //Not working for now
   function sortTrips(tripsToSort: tripData[]) {
-    const sortedTrips = tripsToSort.sort(
-      (a, b) => Date.parse(b.dateStart) - Date.parse(a.dateStart)
-    );
+    const sortedTrips = tripsToSort.sort(function (a, b) {
+      //@ts-ignore
+      return new Date(b.dateStart) - new Date(a.dateStart);
+    });
+    console.log(sortedTrips);
     setList(sortedTrips);
   }
 
+  //persons get added in a separate form
+  const empty: string[] = [];
   function handleAdd(dest: string, start: string, end: string) {
     const newList = [...list];
     newList.push({
@@ -37,8 +40,9 @@ const App = () => {
       destination: dest,
       dateStart: start,
       dateEnd: end,
-      persons: [{ person: "Jack", items: ["Toothbrush", "Hamster"] }],
+      persons: [{ person: "", items: empty }],
     });
+    handleClose();
     sortTrips(newList);
   }
 
@@ -47,18 +51,19 @@ const App = () => {
     sortTrips(newList);
   }
 
+  function handleEdit(id: Number) {}
+
   const validationSchema = Yup.object({
     destination: Yup.string()
       .required("Field required!")
-      .max(32, "Destination name too long!"),
+      .max(16, "Destination name too long!"),
     dateStart: Yup.date()
       .typeError("Please enter a valid date!")
-      .required("This field is required!")
-      .min("2023-01-01", "Too early!!"),
+      .required("This field is required!"),
     dateEnd: Yup.date()
       .typeError("Please enter a valid date!")
       .required("This field is required!")
-      .min("2023-01-01", "Too early!"),
+      .min(Yup.ref("dateStart"), "Inocrrect end date!"),
   });
 
   const {
@@ -96,7 +101,9 @@ const App = () => {
                 type="text"
                 required
               />
-              <p>{errors.destination?.message?.toString()}</p>
+              <p className="errorText">
+                {errors.destination?.message?.toString()}
+              </p>
               <br />
             </div>
             <div className="d-flex justify-content-evenly">
@@ -108,13 +115,22 @@ const App = () => {
                   type="date"
                   required
                 />
-                <p>{errors.dateStart?.message?.toString()}</p>
+                <p className="errorText">
+                  {errors.dateStart?.message?.toString()}
+                </p>
               </div>
               -
               <div className="d-flex flex-column align-items-center">
                 <label htmlFor="dateEnd">Finish date: </label>
-                <input {...register("dateEnd")} type="date" required />
-                <p>{errors.dateEnd?.message?.toString()}</p>
+                <input
+                  className="bg-white text-black border-1"
+                  {...register("dateEnd")}
+                  type="date"
+                  required
+                />
+                <p className="errorText">
+                  {errors.dateEnd?.message?.toString()}
+                </p>
               </div>
             </div>
             <div className="d-flex justify-content-evenly">
@@ -155,7 +171,8 @@ const App = () => {
                   dateStart={item.dateStart}
                   dateEnd={item.dateEnd}
                   persons={item.persons}
-                  onClick={() => handleRemove(item.id)}
+                  handleRemove={() => handleRemove(item.id)}
+                  handleEdit={() => handleEdit(item.id)}
                 />
               );
             })}
