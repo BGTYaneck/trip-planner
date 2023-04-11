@@ -31,16 +31,21 @@ const App = () => {
     setList(sortedTrips);
   }
 
-  //persons get added in a separate form
+  //persons get added in a form in Trip.tsx
   const empty: string[] = [];
-  function handleAdd(dest: string, start: string, end: string) {
+  function handleAdd(
+    dest: string,
+    start: string,
+    end: string,
+    persons: [{ person: string; items: string[] }]
+  ) {
     const newList = [...list];
     newList.push({
       id: list.length == 0 ? 0 : list[list.length - 1].id + 1,
       destination: dest,
       dateStart: start,
       dateEnd: end,
-      persons: [{ person: "", items: empty }],
+      persons: persons,
     });
     handleClose();
     sortTrips(newList);
@@ -64,6 +69,12 @@ const App = () => {
       .typeError("Please enter a valid date!")
       .required("This field is required!")
       .min(Yup.ref("dateStart"), "Inocrrect end date!"),
+    persons: Yup.array().of(
+      Yup.object({
+        person: Yup.string(),
+        items: Yup.array().of(Yup.string()),
+      })
+    ),
   });
 
   const {
@@ -79,7 +90,8 @@ const App = () => {
     handleAdd(
       data.destination,
       data.dateStart.toLocaleDateString(),
-      data.dateEnd.toLocaleDateString()
+      data.dateEnd.toLocaleDateString(),
+      data.persons
     );
     reset();
   };
@@ -88,7 +100,7 @@ const App = () => {
     <div className="d-flex flex-column mx-auto gap-3 w-75">
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Add a trip</Modal.Title>
+          <Modal.Title>Add a Trip +</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmitHandler)}>
@@ -133,6 +145,12 @@ const App = () => {
                 </p>
               </div>
             </div>
+            <input
+              className="bg-white text-black border-1"
+              type="text"
+              {...register("person")}
+            />
+
             <div className="d-flex justify-content-evenly">
               <button
                 onClick={() => handleClose()}

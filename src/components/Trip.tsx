@@ -1,6 +1,5 @@
 import React from "react";
 import { IconTrash, IconEdit } from "@tabler/icons-react";
-import Accordion from "react-bootstrap/Accordion";
 import Items from "./Items";
 import "../App.css";
 
