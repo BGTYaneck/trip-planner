@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
+
 #root {
   width: 100vw;
   margin: 0 auto;
@@ -33,4 +35,3 @@
   color: red;
   font-size: 14px;
 }
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
