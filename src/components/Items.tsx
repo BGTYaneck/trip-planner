@@ -1,4 +1,5 @@
 import React from "react";
+import "../App.css";
 
 type Props = {
   personName: string;
@@ -7,14 +8,8 @@ type Props = {
 
 const Items = (props: Props) => {
   return (
-    <div
-      style={{
-        width: "100%",
-      }}
-    >
-      <p style={{ fontWeight: "bold", marginBottom: "-5px" }}>
-        {props.personName}
-      </p>
+    <div>
+      <p className="mb-1 fw-bold text-capitalize">{props.personName}</p>
       {props.itemsList.map((item: string, index: any) => {
         return (
           <span key={index} className="text-capitalize">

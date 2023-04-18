@@ -85,7 +85,7 @@ const Trip = (props: Props) => {
       </Modal>
       <div className="card p-3">
         <div className="d-flex flex-wrap align-items-center justify-content-between">
-          <div className="d-flex flex-row gap-2 align-items-center justify-center">
+          <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
             <h3>{props.destination} </h3>
             <IconTrash
               className="clickIcon"
@@ -100,7 +100,7 @@ const Trip = (props: Props) => {
             {props.dateStart} - {props.dateEnd}
           </span>
         </div>
-        <div className="d-flex flex-row gap-5 flex-wrap">
+        <div className="d-flex gap-3 flex-column flex-wrap">
           {props.persons.map((item, i) => {
             return (
               <Items key={i} personName={item.person} itemsList={item.items} />
