@@ -10,13 +10,6 @@ import * as Yup from "yup";
 import "./App.css";
 
 const App = () => {
-  const [data, setData] = useState({ person: "", items: [] });
-  const [id, setId] = useState(1);
-
-  useEffect(() => {
-    if (id < list.length) handleAddPersons(id, data);
-  }, [data]);
-
   const [list, setList] = useState<tripData[]>(
     JSON.parse(localStorage.getItem("data")!) ?? []
   );
@@ -29,32 +22,21 @@ const App = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  //Not working for now
   function sortTrips(tripsToSort: tripData[]) {
     const sortedTrips = tripsToSort.sort(function (a, b) {
-      //@ts-ignore
-      return new Date(b.dateStart) - new Date(a.dateStart);
+      return a.dateStart.localeCompare(b.dateStart);
     });
     console.log(sortedTrips);
     setList(sortedTrips);
   }
 
-  function handleAddPersons(
-    id: any,
-    data: { person: string; items: string[] }
-  ) {
-    const newList = [...list];
-    newList[id].persons.push(data);
-    console.log(data);
-    setList(newList);
-  }
-
-  //Persons and items get added in different components
+  //Persons and items get added in Trip.tsx
   const empty: string[] = [];
-  function handleAdd(dest: string, start: string, end: string, person: string) {
+  function handleAdd(dest: string, start: string, end: string) {
+    const highestId = Math.max(...list.map((o) => o.id), 0);
     const newList = [...list];
     newList.push({
-      id: list.length == 0 ? 0 : list[list.length - 1].id + 1,
+      id: list.length == 0 ? 0 : highestId + 1,
       destination: dest,
       dateStart: start,
       dateEnd: end,
@@ -99,8 +81,7 @@ const App = () => {
     handleAdd(
       data.destination,
       data.dateStart.toLocaleDateString(),
-      data.dateEnd.toLocaleDateString(),
-      data.person
+      data.dateEnd.toLocaleDateString()
     );
     reset();
   };
@@ -167,36 +148,30 @@ const App = () => {
         </Modal.Body>
       </Modal>
       <div className="d-flex flex-row gap-5 align-self-center">
-        <span
-          className="btn btn-lg"
-          onClick={() => {
-            sortTrips(list);
-          }}
-        >
+        <span className="btn btn-lg" onClick={() => sortTrips(list)}>
           My Trips
         </span>
         <button onClick={() => handleShow()}>Add a Trip +</button>
       </div>
       <div className="d-flex flex-column gap-2">
-        {list == null
-          ? ""
-          : list.map((item: tripData, i: any) => {
-              return (
-                <Trip
-                  key={i}
-                  destination={item.destination}
-                  dateStart={item.dateStart}
-                  dateEnd={item.dateEnd}
-                  persons={item.persons}
-                  handleRemove={() => handleRemove(item.id)}
-                  handleEdit={() => handleEdit(item.id)}
-                  data={data}
-                  setData={setData}
-                  id={item.id}
-                  setId={setId}
-                />
-              );
-            })}
+        {list.length != 0 ? (
+          list.map((item: tripData, i: any) => {
+            return (
+              <Trip
+                key={i}
+                id={item.id}
+                trip={item}
+                tripsList={list}
+                handleRemove={() => handleRemove(item.id)}
+                handleEdit={() => handleEdit(item.id)}
+              />
+            );
+          })
+        ) : (
+          <p className="text-center opacity-50">
+            No trips yet. To get Started add trips using the button above ^
+          </p>
+        )}
       </div>
     </div>
   );

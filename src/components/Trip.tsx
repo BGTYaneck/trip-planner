@@ -3,22 +3,18 @@ import { IconTrash, IconEdit } from "@tabler/icons-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import Modal from "react-bootstrap/Modal";
+import tripData from "../data/tripData";
 import { useState } from "react";
 import Items from "./Items";
 import * as Yup from "yup";
 import "../App.css";
 
 type Props = {
-  destination: string;
-  dateStart: string;
-  dateEnd: string;
-  persons: { person: string; items: string[] }[];
+  id: Number;
+  trip: tripData;
+  tripsList: tripData[];
   handleRemove: Function;
   handleEdit: Function;
-  data: any;
-  setData: Function;
-  id: Number;
-  setId: Function;
 };
 
 const Trip = (props: Props) => {
@@ -44,9 +40,7 @@ const Trip = (props: Props) => {
   });
 
   const onSubmitHandler = (data: any) => {
-    props.setId(props.id);
-    data.items = data.items.split(",");
-    props.setData(data);
+    console.log("test");
     reset();
     handleClose();
   };
@@ -86,7 +80,7 @@ const Trip = (props: Props) => {
       <div className="card p-3">
         <div className="d-flex flex-wrap align-items-center justify-content-between">
           <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
-            <h3>{props.destination} </h3>
+            <h3>{props.trip.destination} </h3>
             <IconTrash
               className="clickIcon"
               onClick={() => props.handleRemove()}
@@ -97,15 +91,31 @@ const Trip = (props: Props) => {
             />
           </div>
           <span style={{ opacity: "40%" }}>
-            {props.dateStart} - {props.dateEnd}
+            {props.trip.dateStart} - {props.trip.dateEnd}
           </span>
         </div>
         <div className="d-flex gap-3 flex-column flex-wrap">
-          {props.persons.map((item, i) => {
-            return (
-              <Items key={i} personName={item.person} itemsList={item.items} />
-            );
-          })}
+          {props.trip.persons.length == 1 ? (
+            <p
+              className="opacity-50 text-center display-6 mb-1"
+              style={{
+                fontSize: "14px",
+              }}
+            >
+              No persons have been added yet! Use the button below to add people
+              and assign items to them to better plan your trip!
+            </p>
+          ) : (
+            props.trip.persons.map((item, i) => {
+              return (
+                <Items
+                  key={i}
+                  personName={item.person}
+                  itemsList={item.items}
+                />
+              );
+            })
+          )}
         </div>
         <button
           className="d-flex mt-2 btn justify-content-center"
