@@ -162,6 +162,7 @@ const App = () => {
                 id={item.id}
                 trip={item}
                 tripsList={list}
+                setTripsList={sortTrips}
                 handleRemove={() => handleRemove(item.id)}
                 handleEdit={() => handleEdit(item.id)}
               />

@@ -10,9 +10,10 @@ import * as Yup from "yup";
 import "../App.css";
 
 type Props = {
-  id: Number;
+  id: any;
   trip: tripData;
   tripsList: tripData[];
+  setTripsList: Function;
   handleRemove: Function;
   handleEdit: Function;
 };
@@ -40,7 +41,13 @@ const Trip = (props: Props) => {
   });
 
   const onSubmitHandler = (data: any) => {
-    console.log("test");
+    const newList = [...props.tripsList];
+    const object = newList.find((e) => {
+      return e.id == props.id;
+    });
+    console.log(object);
+    object!.persons.push(data);
+    props.setTripsList(newList);
     reset();
     handleClose();
   };
