@@ -46,16 +46,33 @@ const Trip = (props: Props) => {
     const object = newList.find((e) => {
       return e.id == props.id;
     });
-    //Removing the first "empty" person
-    //@ts-ignore
+    //@ts-ignore - Removing the first "empty" person
     object!.persons = object!.persons.filter((item: any) => item.person !== "");
-    console.log(object!.persons);
     //Adding the data;
     data.items = data.items.split(",");
-    object!.persons.push(data);
+    const highestId = Math.max(...object!.persons.map((o) => o.personId), 0);
+    object!.persons.push({
+      //@ts-ignore
+      id: highestId + 1,
+      person: data.person,
+      items: data.items,
+    });
     props.setTripsList(newList);
     reset();
     handleClose();
+  };
+
+  const handleItemDelete = (itemsId: number) => {
+    const newList = [...props.tripsList];
+    const object = props.tripsList.find((e) => {
+      return e.id == props.id;
+    });
+    console.log(itemsId);
+    //@ts-ignore
+    object!.persons = object!.persons.filter(
+      (item: any) => item.id !== itemsId
+    );
+    props.setTripsList(newList);
   };
 
   return (
@@ -108,8 +125,10 @@ const Trip = (props: Props) => {
           </span>
         </div>
         <div className="d-flex gap-3 flex-column flex-wrap">
-          {props.trip.persons.length == 1 &&
-          props.trip.persons[0].person == "" ? (
+          {(props.trip.persons.length == 1 &&
+            props.trip.persons[0].person == "") ||
+          //@ts-ignore
+          props.trip.persons.length == 0 ? (
             <p
               className="opacity-50 text-center display-6 mb-1"
               style={{
@@ -124,8 +143,10 @@ const Trip = (props: Props) => {
               return (
                 <Items
                   key={i}
+                  itemsId={item.personId}
                   personName={item.person}
                   itemsList={item.items}
+                  handleItemDelete={handleItemDelete}
                 />
               );
             })

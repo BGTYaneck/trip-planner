@@ -40,7 +40,7 @@ const App = () => {
       destination: dest,
       dateStart: start,
       dateEnd: end,
-      persons: [{ person: "", items: empty }],
+      persons: [{ personId: 0, person: "", items: empty }],
     });
     handleClose();
     sortTrips(newList);

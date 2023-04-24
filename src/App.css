@@ -11,6 +11,10 @@
   cursor: pointer;
 }
 
+.smallIcon {
+  width: 16px;
+  height: 16px;
+}
 .addPersonsButton {
   background: white;
   color: black;

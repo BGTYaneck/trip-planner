@@ -5,6 +5,7 @@ export default interface tripData {
   dateEnd: string;
   persons: [
     {
+      personId: number;
       person: string;
       items: string[];
     }
