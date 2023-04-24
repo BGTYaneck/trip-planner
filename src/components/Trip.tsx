@@ -42,10 +42,16 @@ const Trip = (props: Props) => {
 
   const onSubmitHandler = (data: any) => {
     const newList = [...props.tripsList];
+    //Finding the object with the right id
     const object = newList.find((e) => {
       return e.id == props.id;
     });
-    console.log(object);
+    //Removing the first "empty" person
+    //@ts-ignore
+    object!.persons = object!.persons.filter((item: any) => item.person !== "");
+    console.log(object!.persons);
+    //Adding the data;
+    data.items = data.items.split(",");
     object!.persons.push(data);
     props.setTripsList(newList);
     reset();
@@ -102,7 +108,8 @@ const Trip = (props: Props) => {
           </span>
         </div>
         <div className="d-flex gap-3 flex-column flex-wrap">
-          {props.trip.persons.length == 1 ? (
+          {props.trip.persons.length == 1 &&
+          props.trip.persons[0].person == "" ? (
             <p
               className="opacity-50 text-center display-6 mb-1"
               style={{
