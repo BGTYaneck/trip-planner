@@ -50,10 +50,9 @@ const Trip = (props: Props) => {
     object!.persons = object!.persons.filter((item: any) => item.person !== "");
     //Adding the data;
     data.items = data.items.split(",");
-    const highestId = Math.max(...object!.persons.map((o) => o.personId), 0);
+    const highestId = Math.max(...object!.persons.map((o) => o.itemsId), 0);
     object!.persons.push({
-      //@ts-ignore
-      id: highestId + 1,
+      itemsId: highestId + 1,
       person: data.person,
       items: data.items,
     });
@@ -62,15 +61,13 @@ const Trip = (props: Props) => {
     handleClose();
   };
 
-  const handleItemDelete = (itemsId: number) => {
+  const handlePersonDelete = (itemsId: number) => {
     const newList = [...props.tripsList];
     const object = props.tripsList.find((e) => {
       return e.id == props.id;
     });
-    console.log(itemsId);
-    //@ts-ignore
     object!.persons = object!.persons.filter(
-      (item: any) => item.id !== itemsId
+      (item: any) => item.itemsId !== itemsId
     );
     props.setTripsList(newList);
   };
@@ -143,10 +140,10 @@ const Trip = (props: Props) => {
               return (
                 <Items
                   key={i}
-                  itemsId={item.personId}
+                  itemsId={item.itemsId}
                   personName={item.person}
                   itemsList={item.items}
-                  handleItemDelete={handleItemDelete}
+                  handleItemDelete={handlePersonDelete}
                 />
               );
             })

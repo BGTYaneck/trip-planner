@@ -1,10 +1,13 @@
 import React from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import ToastContainer from "react-bootstrap/ToastContainer";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Modal from "react-bootstrap/Modal";
+import Toast from "react-bootstrap/Toast";
 import tripData from "./data/tripData";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import Trip from "./components/Trip";
 import * as Yup from "yup";
 import "./App.css";
@@ -18,6 +21,13 @@ const App = () => {
     localStorage.setItem("data", JSON.stringify(list));
   }, [list]);
 
+  const [showToast, setShowToast] = useState(false);
+
+  const displayToast = () => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -26,7 +36,7 @@ const App = () => {
     const sortedTrips = tripsToSort.sort(function (a, b) {
       return a.dateStart.localeCompare(b.dateStart);
     });
-    console.log(sortedTrips);
+    displayToast();
     setList(sortedTrips);
   }
 
@@ -40,7 +50,7 @@ const App = () => {
       destination: dest,
       dateStart: start,
       dateEnd: end,
-      persons: [{ personId: 0, person: "", items: empty }],
+      persons: [{ itemsId: 0, person: "", items: empty }],
     });
     handleClose();
     sortTrips(newList);
@@ -149,7 +159,7 @@ const App = () => {
       </Modal>
       <div className="d-flex flex-row gap-5 align-self-center">
         <span className="btn btn-lg" onClick={() => sortTrips(list)}>
-          My Trips
+          Refresh
         </span>
         <button onClick={() => handleShow()}>Add a Trip +</button>
       </div>
@@ -174,6 +184,18 @@ const App = () => {
           </p>
         )}
       </div>
+      <ToastContainer>
+        <Toast show={showToast} onClose={() => setShowToast(false)}>
+          <Toast.Header>
+            <strong className="me-auto text-success">
+              <IconCheck />
+              Success!
+            </strong>
+            <small>Notification</small>
+          </Toast.Header>
+          <Toast.Body>Operation successful!</Toast.Body>
+        </Toast>
+      </ToastContainer>
     </div>
   );
 };

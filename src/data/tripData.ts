@@ -3,11 +3,9 @@ export default interface tripData {
   destination: string;
   dateStart: string;
   dateEnd: string;
-  persons: [
-    {
-      personId: number;
-      person: string;
-      items: string[];
-    }
-  ];
+  persons: {
+    itemsId: number;
+    person: string;
+    items: string[];
+  }[];
 }

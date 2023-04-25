@@ -14,6 +14,7 @@ const Items = (props: Props) => {
     <div>
       <p className="mb-1 fw-bold text-capitalize gap-2">
         {props.personName}
+
         {
           <IconBackspaceFilled
             className="clickIcon smallIcon"
