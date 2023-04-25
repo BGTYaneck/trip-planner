@@ -1,5 +1,7 @@
 import React from "react";
-import { IconBackspaceFilled } from "@tabler/icons-react";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import { IconEraser, IconBallpen } from "@tabler/icons-react";
+import Tooltip from "react-bootstrap/Tooltip";
 import "../App.css";
 
 type Props = {
@@ -12,16 +14,40 @@ type Props = {
 const Items = (props: Props) => {
   return (
     <div>
-      <p className="mb-1 fw-bold text-capitalize gap-2">
+      <div className="mb-1 fw-bold text-capitalize gap-2 d-flex flex-row align-items-center">
         {props.personName}
 
         {
-          <IconBackspaceFilled
-            className="clickIcon smallIcon"
-            onClick={() => props.handleItemDelete(props.itemsId)}
-          />
+          <div className="d-flex flex-row gap-1 w-25">
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                  <small>Delete person</small>
+                </Tooltip>
+              }
+            >
+              <IconEraser
+                className="clickIcon smallIcon"
+                onClick={() => props.handleItemDelete(props.itemsId)}
+              />
+            </OverlayTrigger>
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                  <small>Edit person</small>
+                </Tooltip>
+              }
+            >
+              <IconBallpen
+                className="clickIcon smallIcon"
+                onClick={() => props.handleItemDelete(props.itemsId)}
+              />
+            </OverlayTrigger>
+          </div>
         }
-      </p>
+      </div>
       {props.itemsList.map((item: string, index: any) => {
         return (
           <span key={index} className="text-capitalize">

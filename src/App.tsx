@@ -2,12 +2,13 @@ import React from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import ToastContainer from "react-bootstrap/ToastContainer";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { IconCheck } from "@tabler/icons-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Modal from "react-bootstrap/Modal";
 import Toast from "react-bootstrap/Toast";
 import tripData from "./data/tripData";
-import { IconCheck, IconX } from "@tabler/icons-react";
+
 import Trip from "./components/Trip";
 import * as Yup from "yup";
 import "./App.css";
@@ -21,13 +22,14 @@ const App = () => {
     localStorage.setItem("data", JSON.stringify(list));
   }, [list]);
 
-  const [showToast, setShowToast] = useState(false);
+  let isEditing: boolean = false;
 
   const displayToast = () => {
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
   };
 
+  const [showToast, setShowToast] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);

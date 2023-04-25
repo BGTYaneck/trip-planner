@@ -1,6 +1,8 @@
 import React from "react";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { IconTrash, IconEdit } from "@tabler/icons-react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Tooltip from "react-bootstrap/Tooltip";
 import { useForm } from "react-hook-form";
 import Modal from "react-bootstrap/Modal";
 import tripData from "../data/tripData";
@@ -108,14 +110,32 @@ const Trip = (props: Props) => {
         <div className="d-flex flex-wrap align-items-center justify-content-between">
           <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
             <h3>{props.trip.destination} </h3>
-            <IconTrash
-              className="clickIcon"
-              onClick={() => props.handleRemove()}
-            />
-            <IconEdit
-              className="clickIcon"
-              onClick={() => props.handleEdit()}
-            />
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                  <strong>Delete Trip</strong>
+                </Tooltip>
+              }
+            >
+              <IconTrash
+                className="clickIcon"
+                onClick={() => props.handleRemove()}
+              />
+            </OverlayTrigger>
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                  <strong>Edit Trip</strong>
+                </Tooltip>
+              }
+            >
+              <IconEdit
+                className="clickIcon"
+                onClick={() => props.handleEdit()}
+              />
+            </OverlayTrigger>
           </div>
           <span style={{ opacity: "40%" }}>
             {props.trip.dateStart} - {props.trip.dateEnd}
