@@ -11,10 +11,6 @@
   cursor: pointer;
 }
 
-.smallIcon {
-  width: 16px;
-  height: 16px;
-}
 .addPersonsButton {
   background: white;
   color: black;
@@ -42,4 +38,10 @@
 
 .font-bold {
   font-weight: bold !important;
+}
+
+@media (min-width: 790px) {
+  .autoSize {
+    width: 85%;
+  }
 }

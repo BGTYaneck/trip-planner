@@ -95,7 +95,7 @@ const App = () => {
   };
 
   return (
-    <div className="d-flex flex-column mx-auto gap-3 w-75">
+    <div className="d-flex flex-column mx-auto gap-3 autoSize">
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Trip Manager</Modal.Title>

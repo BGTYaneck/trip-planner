@@ -28,7 +28,7 @@ const Items = (props: Props) => {
               }
             >
               <IconEraser
-                className="clickIcon smallIcon"
+                className="clickIcon"
                 onClick={() => props.handleItemDelete(props.itemsId)}
               />
             </OverlayTrigger>
@@ -41,7 +41,7 @@ const Items = (props: Props) => {
               }
             >
               <IconBallpen
-                className="clickIcon smallIcon"
+                className="clickIcon"
                 onClick={() => props.handleItemDelete(props.itemsId)}
               />
             </OverlayTrigger>

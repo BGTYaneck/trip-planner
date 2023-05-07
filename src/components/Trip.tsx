@@ -112,7 +112,6 @@ const Trip = (props: Props) => {
   });
 
   const onSubmitHandlerEdit = (data: any) => {
-    console.log(data);
     const newList = [...props.tripsList];
     const object = newList.find((e) => {
       return e.id == props.id;
@@ -170,15 +169,17 @@ const Trip = (props: Props) => {
             onSubmit={handleSubmitEdit(onSubmitHandlerEdit)}
           >
             <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
-              <input
-                className="form-control"
-                placeholder="Destination..."
-                {...registerEdit("destination")}
-                type="text"
-              />
-              <p className="errorText">
-                {errors.destination?.message?.toString()}
-              </p>
+              <div className="d-flex flex-column align-self-baseline">
+                <input
+                  className="form-control"
+                  placeholder="Destination..."
+                  {...registerEdit("destination")}
+                  type="text"
+                />
+                <p className="errorText ">
+                  {errorsEdit.destination?.message?.toString()}
+                </p>
+              </div>
               <OverlayTrigger
                 placement="bottom"
                 overlay={
@@ -187,7 +188,10 @@ const Trip = (props: Props) => {
                   </Tooltip>
                 }
               >
-                <button type="submit" className="btn btn-transparent">
+                <button
+                  type="submit"
+                  className="btn btn-transparent align-self-baseline"
+                >
                   <IconChecks className="clickIcon" />
                 </button>
               </OverlayTrigger>
@@ -199,16 +203,18 @@ const Trip = (props: Props) => {
                   </Tooltip>
                 }
               >
-                <IconX
-                  className="clickIcon"
-                  onClick={() => {
-                    setEditing(!editing), resetEdit();
-                  }}
-                />
+                <button className="btn btn-transparent align-self-baseline">
+                  <IconX
+                    className="clickIcon"
+                    onClick={() => {
+                      setEditing(!editing), resetEdit();
+                    }}
+                  />
+                </button>
               </OverlayTrigger>
             </div>
             <div className="d-flex flex-row gap-2">
-              <div className="d-flex flex-col">
+              <div className="d-flex flex-column align-self-baseline">
                 <input
                   className="form-control"
                   type="date"
@@ -218,8 +224,8 @@ const Trip = (props: Props) => {
                   {errorsEdit.dateStart?.message?.toString()}
                 </p>
               </div>
-              -
-              <div className="d-flex flex-col">
+              <p className="align-self-baseline">-</p>
+              <div className="d-flex flex-column align-self-baseline">
                 <input
                   className="form-control"
                   type="date"
@@ -269,7 +275,7 @@ const Trip = (props: Props) => {
             </span>
           </div>
         )}
-        <div className="d-flex gap-3 flex-column flex-wrap">
+        <div className="d-flex gap-3 flex-colum flex-wrap">
           {(props.trip.persons.length == 1 &&
             props.trip.persons[0].person == "") ||
           //@ts-ignore
@@ -281,7 +287,7 @@ const Trip = (props: Props) => {
               }}
             >
               No persons have been added yet! Use the button below to add people
-              and assign items to them to plan your trip in a better way!
+              and assign items for them to take!
             </p>
           ) : (
             props.trip.persons.map((item, i) => {
