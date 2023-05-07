@@ -14,7 +14,7 @@ type Props = {
 const Items = (props: Props) => {
   return (
     <div>
-      <div className="mb-1 fw-bold text-capitalize gap-2 d-flex flex-row align-items-center">
+      <div className="mb-1 fw-bold text-capitalize gap-2 d-flex flex-row align-items-center mt-2">
         {props.personName}
 
         {
@@ -50,7 +50,7 @@ const Items = (props: Props) => {
       </div>
       {props.itemsList.map((item: string, index: any) => {
         return (
-          <span key={index} className="text-capitalize">
+          <span key={index} className="text-capitalize opacity-50">
             {(index ? ", " : "") + item}
           </span>
         );

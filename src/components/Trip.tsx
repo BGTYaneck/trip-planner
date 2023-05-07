@@ -1,6 +1,6 @@
 import React from "react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import { IconTrash, IconEdit } from "@tabler/icons-react";
+import { IconTrash, IconEdit, IconChecks, IconX } from "@tabler/icons-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Tooltip from "react-bootstrap/Tooltip";
 import { useForm } from "react-hook-form";
@@ -17,11 +17,12 @@ type Props = {
   tripsList: tripData[];
   setTripsList: Function;
   handleRemove: Function;
-  handleEdit: Function;
+  schema: any;
 };
 
 const Trip = (props: Props) => {
   const [show, setShow] = useState(false);
+  const [editing, setEditing] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -63,6 +64,7 @@ const Trip = (props: Props) => {
     handleClose();
   };
 
+  //Delete
   const handlePersonDelete = (itemsId: number) => {
     const newList = [...props.tripsList];
     const object = props.tripsList.find((e) => {
@@ -72,6 +74,59 @@ const Trip = (props: Props) => {
       (item: any) => item.itemsId !== itemsId
     );
     props.setTripsList(newList);
+  };
+
+  //Edit
+  const validationSchemaEdit = Yup.object({
+    destination: Yup.string()
+      .required("This field is required!")
+      .min(3, "Destination name too short!")
+      .max(32, "Destination name too long!"),
+    dateStart: Yup.date()
+      .typeError("Please enter a valid date!")
+      .required("This field is required!"),
+    dateEnd: Yup.date()
+      .typeError("Please enter a valid date!")
+      .required("This field is required!")
+      .min(Yup.ref("dateStart"), "Inocrrect end date!"),
+  });
+
+  const convertDates = (date: string) => {
+    if (parseInt(date.split(".")[0]) < 10) {
+      return ("0" + date).split(".").reverse().join("-");
+    } else return date.split(".").reverse().join("-");
+  };
+
+  const {
+    register: registerEdit,
+    handleSubmit: handleSubmitEdit,
+    formState: { errors: errorsEdit },
+    reset: resetEdit,
+  } = useForm({
+    resolver: yupResolver(validationSchemaEdit),
+    defaultValues: {
+      destination: props.trip.destination,
+      dateStart: convertDates(props.trip.dateStart),
+      dateEnd: convertDates(props.trip.dateEnd),
+    },
+  });
+
+  const onSubmitHandlerEdit = (data: any) => {
+    console.log(data);
+    const newList = [...props.tripsList];
+    const object = newList.find((e) => {
+      return e.id == props.id;
+    });
+    object!.destination = data.destination;
+    object!.dateStart = data.dateStart.toLocaleDateString();
+    object!.dateEnd = data.dateEnd.toLocaleDateString();
+    props.setTripsList(newList);
+    resetEdit({
+      destination: props.trip.destination,
+      dateStart: convertDates(props.trip.dateStart),
+      dateEnd: convertDates(props.trip.dateEnd),
+    });
+    setEditing(!editing);
   };
 
   return (
@@ -85,7 +140,7 @@ const Trip = (props: Props) => {
             <div className="d-flex flex-column">
               <label htmlFor="destination">Add a person</label>
               <input
-                className="bg-white text-black border-1"
+                className="form-control"
                 placeholder="Person name..."
                 {...register("person")}
                 type="text"
@@ -94,53 +149,126 @@ const Trip = (props: Props) => {
               <br />
               <label htmlFor="destination">Items (Optional)</label>
               <input
-                className="bg-white text-black border-1"
+                className="form-control"
                 placeholder="First Item, Second Item, Third Item"
                 {...register("items")}
                 type="text"
               />
               <p className="errorText">{errors.items?.message?.toString()}</p>
               <br />
-              <button className="btn">Confirm</button>
+              <button type="submit" className="btn">
+                Confirm
+              </button>
             </div>
           </form>
         </Modal.Body>
       </Modal>
       <div className="card p-3">
-        <div className="d-flex flex-wrap align-items-center justify-content-between">
-          <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
-            <h3>{props.trip.destination} </h3>
-            <OverlayTrigger
-              placement="bottom"
-              overlay={
-                <Tooltip id="tooltip" style={{ position: "fixed" }}>
-                  <strong>Delete Trip</strong>
-                </Tooltip>
-              }
-            >
-              <IconTrash
-                className="clickIcon"
-                onClick={() => props.handleRemove()}
+        {editing ? (
+          <form
+            className="d-flex flex-wrap align-items-center justify-content-between mb-2"
+            onSubmit={handleSubmitEdit(onSubmitHandlerEdit)}
+          >
+            <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
+              <input
+                className="form-control"
+                placeholder="Destination..."
+                {...registerEdit("destination")}
+                type="text"
               />
-            </OverlayTrigger>
-            <OverlayTrigger
-              placement="bottom"
-              overlay={
-                <Tooltip id="tooltip" style={{ position: "fixed" }}>
-                  <strong>Edit Trip</strong>
-                </Tooltip>
-              }
-            >
-              <IconEdit
-                className="clickIcon"
-                onClick={() => props.handleEdit()}
-              />
-            </OverlayTrigger>
+              <p className="errorText">
+                {errors.destination?.message?.toString()}
+              </p>
+              <OverlayTrigger
+                placement="bottom"
+                overlay={
+                  <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                    <strong>Confirm</strong>
+                  </Tooltip>
+                }
+              >
+                <button type="submit" className="btn btn-transparent">
+                  <IconChecks className="clickIcon" />
+                </button>
+              </OverlayTrigger>
+              <OverlayTrigger
+                placement="bottom"
+                overlay={
+                  <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                    <strong>Cancel</strong>
+                  </Tooltip>
+                }
+              >
+                <IconX
+                  className="clickIcon"
+                  onClick={() => {
+                    setEditing(!editing), resetEdit();
+                  }}
+                />
+              </OverlayTrigger>
+            </div>
+            <div className="d-flex flex-row gap-2">
+              <div className="d-flex flex-col">
+                <input
+                  className="form-control"
+                  type="date"
+                  {...registerEdit("dateStart")}
+                />
+                <p className="errorText">
+                  {errorsEdit.dateStart?.message?.toString()}
+                </p>
+              </div>
+              -
+              <div className="d-flex flex-col">
+                <input
+                  className="form-control"
+                  type="date"
+                  {...registerEdit("dateEnd")}
+                />
+                <p className="errorText">
+                  {errorsEdit.dateEnd?.message?.toString()}
+                </p>
+              </div>
+            </div>
+          </form>
+        ) : (
+          <div className="d-flex flex-wrap align-items-center justify-content-between">
+            <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
+              <h3>{props.trip.destination} </h3>
+              <OverlayTrigger
+                placement="bottom"
+                overlay={
+                  <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                    <strong>Delete Trip</strong>
+                  </Tooltip>
+                }
+              >
+                <IconTrash
+                  className="clickIcon"
+                  onClick={() => props.handleRemove()}
+                />
+              </OverlayTrigger>
+              <OverlayTrigger
+                placement="bottom"
+                overlay={
+                  <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                    <strong>Edit Trip</strong>
+                  </Tooltip>
+                }
+              >
+                <IconEdit
+                  className="clickIcon"
+                  onClick={() => {
+                    setEditing(!editing), resetEdit();
+                  }}
+                />
+              </OverlayTrigger>
+            </div>
+            <span style={{ opacity: "40%" }}>
+              {props.trip.dateStart} - {props.trip.dateEnd}
+            </span>
           </div>
-          <span style={{ opacity: "40%" }}>
-            {props.trip.dateStart} - {props.trip.dateEnd}
-          </span>
-        </div>
+        )}
         <div className="d-flex gap-3 flex-column flex-wrap">
           {(props.trip.persons.length == 1 &&
             props.trip.persons[0].person == "") ||
@@ -153,7 +281,7 @@ const Trip = (props: Props) => {
               }}
             >
               No persons have been added yet! Use the button below to add people
-              and assign items to them to better plan your trip!
+              and assign items to them to plan your trip in a better way!
             </p>
           ) : (
             props.trip.persons.map((item, i) => {

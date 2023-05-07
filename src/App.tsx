@@ -22,8 +22,6 @@ const App = () => {
     localStorage.setItem("data", JSON.stringify(list));
   }, [list]);
 
-  let isEditing: boolean = false;
-
   const displayToast = () => {
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3000);
@@ -62,8 +60,6 @@ const App = () => {
     const newList = list.filter((item: tripData) => item.id !== id);
     sortTrips(newList);
   }
-
-  function handleEdit(id: Number) {}
 
   const validationSchema = Yup.object({
     destination: Yup.string()
@@ -109,7 +105,7 @@ const App = () => {
             <div className="d-flex flex-column">
               <label htmlFor="destination">Destination: </label>
               <input
-                className="bg-white text-black border-1"
+                className="form-control"
                 placeholder="Destination name..."
                 {...register("destination")}
                 type="text"
@@ -123,7 +119,7 @@ const App = () => {
               <div className="d-flex flex-column align-items-center">
                 <label htmlFor="dateStart">Start date: </label>
                 <input
-                  className="bg-white text-black border-1"
+                  className="form-control"
                   {...register("dateStart")}
                   type="date"
                 />
@@ -135,7 +131,7 @@ const App = () => {
               <div className="d-flex flex-column align-items-center">
                 <label htmlFor="dateEnd">Finish date: </label>
                 <input
-                  className="bg-white text-black border-1"
+                  className="form-control"
                   type="date"
                   {...register("dateEnd")}
                 />
@@ -144,17 +140,10 @@ const App = () => {
                 </p>
               </div>
             </div>
-            <div className="d-flex justify-content-evenly m-2">
-              <button
-                onClick={() => handleClose()}
-                style={{
-                  color: "black",
-                  backgroundColor: "white",
-                }}
-              >
-                Close
+            <div className="d-flex justify-content-center">
+              <button type="submit" className="btn w-100">
+                Confirm
               </button>
-              <button type="submit">Confirm</button>
             </div>
           </form>
         </Modal.Body>
@@ -176,7 +165,7 @@ const App = () => {
                 tripsList={list}
                 setTripsList={sortTrips}
                 handleRemove={() => handleRemove(item.id)}
-                handleEdit={() => handleEdit(item.id)}
+                schema={validationSchema}
               />
             );
           })
