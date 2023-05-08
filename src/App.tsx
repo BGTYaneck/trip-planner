@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import Modal from "react-bootstrap/Modal";
 import Toast from "react-bootstrap/Toast";
 import tripData from "./data/tripData";
-
 import Trip from "./components/Trip";
 import * as Yup from "yup";
 import "./App.css";
@@ -24,7 +23,7 @@ const App = () => {
 
   const displayToast = () => {
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    setTimeout(() => setShowToast(false), 2000);
   };
 
   const [showToast, setShowToast] = useState(false);
@@ -61,7 +60,7 @@ const App = () => {
     sortTrips(newList);
   }
 
-  const validationSchema = Yup.object({
+  const tripsSchema = Yup.object({
     destination: Yup.string()
       .required("This field is required!")
       .min(3, "Destination name too short!")
@@ -82,7 +81,7 @@ const App = () => {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(tripsSchema),
   });
 
   const onSubmitHandler = (data: any) => {
@@ -103,7 +102,7 @@ const App = () => {
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="d-flex flex-column">
-              <label htmlFor="destination">Destination: </label>
+              <label htmlFor="destination">Destination:</label>
               <input
                 className="form-control"
                 placeholder="Destination name..."
@@ -165,7 +164,6 @@ const App = () => {
                 tripsList={list}
                 setTripsList={sortTrips}
                 handleRemove={() => handleRemove(item.id)}
-                schema={validationSchema}
               />
             );
           })

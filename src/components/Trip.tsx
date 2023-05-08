@@ -1,6 +1,6 @@
 import React from "react";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { IconTrash, IconEdit, IconChecks, IconX } from "@tabler/icons-react";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Tooltip from "react-bootstrap/Tooltip";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,6 @@ type Props = {
   tripsList: tripData[];
   setTripsList: Function;
   handleRemove: Function;
-  schema: any;
 };
 
 const Trip = (props: Props) => {
@@ -26,7 +25,7 @@ const Trip = (props: Props) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const validationSchema = Yup.object({
+  const itemsSchema = Yup.object({
     person: Yup.string()
       .min(3, "Name too short!")
       .max(24, "Name too long!")
@@ -40,7 +39,7 @@ const Trip = (props: Props) => {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(itemsSchema),
   });
 
   const onSubmitHandler = (data: any) => {
@@ -62,6 +61,7 @@ const Trip = (props: Props) => {
     props.setTripsList(newList);
     reset();
     handleClose();
+    console.log(newList);
   };
 
   //Delete
@@ -91,6 +91,7 @@ const Trip = (props: Props) => {
       .min(Yup.ref("dateStart"), "Inocrrect end date!"),
   });
 
+  //Check if the day is smaller than 10, if so add a 0 (required format for intialValues)
   const convertDates = (date: string) => {
     if (parseInt(date.split(".")[0]) < 10) {
       return ("0" + date).split(".").reverse().join("-");
@@ -275,7 +276,7 @@ const Trip = (props: Props) => {
             </span>
           </div>
         )}
-        <div className="d-flex gap-3 flex-colum flex-wrap">
+        <div className="d-flex gap-3 flex-column flex-wrap">
           {(props.trip.persons.length == 1 &&
             props.trip.persons[0].person == "") ||
           //@ts-ignore
@@ -294,10 +295,13 @@ const Trip = (props: Props) => {
               return (
                 <Items
                   key={i}
+                  id={props.id}
                   itemsId={item.itemsId}
                   personName={item.person}
                   itemsList={item.items}
                   handleItemDelete={handlePersonDelete}
+                  tripsList={props.tripsList}
+                  setTripsList={props.setTripsList}
                 />
               );
             })

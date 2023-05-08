@@ -11,24 +11,13 @@
   cursor: pointer;
 }
 
-.addPersonsButton {
-  background: white;
-  color: black;
-  height: 30px;
-  display: "flex";
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  border: 0;
-  transition: 0.3s;
-  opacity: 0.6;
+.smallIcon {
+  height: 12px;
+  width: 12px;
 }
 
-.addPersonsButton:hover {
-  background: #d7d7d7;
-  transition: 0.3s;
-  border: 0;
-  opacity: 0.6;
+.smallIcon:hover {
+  cursor: pointer;
 }
 
 .errorText {
