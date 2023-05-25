@@ -241,7 +241,7 @@ const Trip = (props: Props) => {
         ) : (
           <div className="d-flex flex-wrap align-items-center justify-content-between">
             <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
-              <h3>{props.trip.destination} </h3>
+              <h3>🌇{props.trip.destination} </h3>
               <OverlayTrigger
                 placement="bottom"
                 overlay={
@@ -272,7 +272,7 @@ const Trip = (props: Props) => {
               </OverlayTrigger>
             </div>
             <span style={{ opacity: "40%" }}>
-              {props.trip.dateStart} - {props.trip.dateEnd}
+              🗓️{props.trip.dateStart} - {props.trip.dateEnd}
             </span>
           </div>
         )}
@@ -311,7 +311,7 @@ const Trip = (props: Props) => {
           className="d-flex mt-2 btn justify-content-center"
           onClick={() => handleShow()}
         >
-          Add a participant +
+          Add a participant ➕
         </button>
       </div>
     </div>

@@ -125,7 +125,7 @@ const Items = (props: Props) => {
       ) : (
         <div>
           <div className="mb-1 fw-bold text-capitalize gap-2 d-flex flex-row align-items-center mt-2">
-            {props.personName}
+            🙎{props.personName}
             <div className="d-flex flex-row gap-1 w-25">
               <OverlayTrigger
                 placement="bottom"

@@ -2,7 +2,7 @@ import React from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import ToastContainer from "react-bootstrap/ToastContainer";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import { IconCheck, IconPlus } from "@tabler/icons-react";
+import { IconCheck, IconPlus, IconSearch } from "@tabler/icons-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Tooltip from "react-bootstrap/Tooltip";
 import { useState, useEffect } from "react";
@@ -19,19 +19,31 @@ const App = () => {
     JSON.parse(localStorage.getItem("data")!) ?? []
   );
 
+  const [showToast, setShowToast] = useState(false);
+  const [search, setSearch] = useState("");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   useEffect(() => {
     localStorage.setItem("data", JSON.stringify(list));
   }, [list]);
 
   const displayToast = () => {
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 2000);
+    setTimeout(() => setShowToast(false), 1500);
   };
 
-  const [showToast, setShowToast] = useState(false);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  useEffect(() => {
+    if (search !== "") {
+      list.filter(
+        (item: tripData) =>
+          item.destination.includes(search!) ||
+          item.dateStart.includes(search!) ||
+          item.dateEnd.includes(search!)
+      );
+    }
+  }, [search]);
 
   function sortTrips(tripsToSort: tripData[]) {
     const sortedTrips = tripsToSort.sort(function (a, b) {
@@ -149,34 +161,72 @@ const App = () => {
           </form>
         </Modal.Body>
       </Modal>
-      <OverlayTrigger
-        placement="bottom"
-        overlay={
-          <Tooltip id="tooltip" style={{ position: "fixed" }}>
-            <strong>Add a trip</strong>
-          </Tooltip>
-        }
-      >
-        <div className="d-flex flex-row gap-5 align-self-center">
-          <button onClick={() => handleShow()}>
-            <IconPlus />
-          </button>
-        </div>
-      </OverlayTrigger>
+      <div className="d-flex flex-row justify-content-center align-self-center gap-3">
+        <input
+          className="form-control"
+          type="text"
+          placeholder="🔎 Search..."
+          //@ts-ignore
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <OverlayTrigger
+          placement="bottom"
+          overlay={
+            <Tooltip id="tooltip" style={{ position: "fixed" }}>
+              <strong>Add a trip</strong>
+            </Tooltip>
+          }
+        >
+          <div className="d-flex flex-row gap-5 align-self-center">
+            <button onClick={() => handleShow()}>
+              <IconPlus />
+            </button>
+          </div>
+        </OverlayTrigger>
+      </div>
       <div className="d-flex flex-column gap-2">
         {list.length != 0 ? (
-          list.map((item: tripData, i: any) => {
-            return (
-              <Trip
-                key={i}
-                id={item.id}
-                trip={item}
-                tripsList={list}
-                setTripsList={sortTrips}
-                handleRemove={() => handleRemove(item.id)}
-              />
-            );
-          })
+          search != "" ? (
+            list
+              .filter(
+                (item: tripData) =>
+                  item.destination
+                    .toUpperCase()
+                    //@ts-ignore
+                    .includes(search!.toUpperCase()) ||
+                  //@ts-ignore
+                  item.dateStart
+                    .toUpperCase()
+                    .includes(search!.toUpperCase()) ||
+                  //@ts-ignore
+                  item.dateEnd.toUpperCase().includes(search!.toUpperCase())
+              )
+              .map((item: tripData, i: any) => {
+                return (
+                  <Trip
+                    key={i}
+                    id={item.id}
+                    trip={item}
+                    tripsList={list}
+                    setTripsList={sortTrips}
+                    handleRemove={() => handleRemove(item.id)}
+                  />
+                );
+              })
+          ) : (
+            list.map((item: tripData, i: any) => {
+              return (
+                <Trip
+                  key={i}
+                  id={item.id}
+                  trip={item}
+                  tripsList={list}
+                  setTripsList={sortTrips}
+                  handleRemove={() => handleRemove(item.id)}
+                />
+              );
+            })
+          )
         ) : (
           <p className="text-center opacity-50">
             No trips yet. To get Started add trips using the button above ^
