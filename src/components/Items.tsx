@@ -70,7 +70,7 @@ const Items = (props: Props) => {
             <div className="d-flex flex-column w-100">
               <input
                 className="form-control"
-                placeholder="Person name..."
+                placeholder="Participant name..."
                 {...registerEdit("person")}
                 type="text"
               />
@@ -131,7 +131,7 @@ const Items = (props: Props) => {
                 placement="bottom"
                 overlay={
                   <Tooltip id="tooltip" style={{ position: "fixed" }}>
-                    <small>Delete person</small>
+                    <small>Delete participant</small>
                   </Tooltip>
                 }
               >
@@ -144,7 +144,7 @@ const Items = (props: Props) => {
                 placement="bottom"
                 overlay={
                   <Tooltip id="tooltip" style={{ position: "fixed" }}>
-                    <small>Edit person</small>
+                    <small>Edit participant</small>
                   </Tooltip>
                 }
               >

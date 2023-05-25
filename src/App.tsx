@@ -1,8 +1,10 @@
 import React from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import ToastContainer from "react-bootstrap/ToastContainer";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import { IconCheck, IconPlus } from "@tabler/icons-react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { IconCheck } from "@tabler/icons-react";
+import Tooltip from "react-bootstrap/Tooltip";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Modal from "react-bootstrap/Modal";
@@ -39,7 +41,7 @@ const App = () => {
     setList(sortedTrips);
   }
 
-  //Persons and items get added in Trip.tsx
+  //Participants and items get added in Trip.tsx
   const empty: string[] = [];
   function handleAdd(dest: string, start: string, end: string) {
     const highestId = Math.max(...list.map((o) => o.id), 0);
@@ -147,12 +149,20 @@ const App = () => {
           </form>
         </Modal.Body>
       </Modal>
-      <div className="d-flex flex-row gap-5 align-self-center">
-        <span className="btn btn-lg" onClick={() => sortTrips(list)}>
-          Refresh
-        </span>
-        <button onClick={() => handleShow()}>Add a Trip +</button>
-      </div>
+      <OverlayTrigger
+        placement="bottom"
+        overlay={
+          <Tooltip id="tooltip" style={{ position: "fixed" }}>
+            <strong>Add a trip</strong>
+          </Tooltip>
+        }
+      >
+        <div className="d-flex flex-row gap-5 align-self-center">
+          <button onClick={() => handleShow()}>
+            <IconPlus />
+          </button>
+        </div>
+      </OverlayTrigger>
       <div className="d-flex flex-column gap-2">
         {list.length != 0 ? (
           list.map((item: tripData, i: any) => {

@@ -133,15 +133,15 @@ const Trip = (props: Props) => {
     <div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Persons Manager</Modal.Title>
+          <Modal.Title>Participants Manager</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="d-flex flex-column">
-              <label htmlFor="destination">Add a person</label>
+              <label htmlFor="destination">Add a participant</label>
               <input
                 className="form-control"
-                placeholder="Person name..."
+                placeholder="Participant name..."
                 {...register("person")}
                 type="text"
               />
@@ -287,8 +287,8 @@ const Trip = (props: Props) => {
                 fontSize: "14px",
               }}
             >
-              No persons have been added yet! Use the button below to add people
-              and assign items for them to take!
+              No participants have been added yet! Use the button below to add
+              people and add items for them to take!
             </p>
           ) : (
             props.trip.persons.map((item, i) => {
@@ -311,7 +311,7 @@ const Trip = (props: Props) => {
           className="d-flex mt-2 btn justify-content-center"
           onClick={() => handleShow()}
         >
-          Add a person +
+          Add a participant +
         </button>
       </div>
     </div>
