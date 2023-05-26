@@ -234,7 +234,6 @@ const App = () => {
                     tripsList={list}
                     setTripsList={sortTrips}
                     handleRemove={() => handleRemove(item.id)}
-                    type={"WIP"}
                   />
                 );
               })
