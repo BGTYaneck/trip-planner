@@ -2,7 +2,7 @@ import React from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import ToastContainer from "react-bootstrap/ToastContainer";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import { IconCheck, IconPlus, IconSearch } from "@tabler/icons-react";
+import { IconCheck, IconPlus } from "@tabler/icons-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Tooltip from "react-bootstrap/Tooltip";
 import { useState, useEffect } from "react";
@@ -21,6 +21,7 @@ const App = () => {
 
   const [showToast, setShowToast] = useState(false);
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState("Beach & Relaxation");
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -51,6 +52,7 @@ const App = () => {
     });
     displayToast();
     setList(sortedTrips);
+    console.log(list);
   }
 
   //Participants and items get added in Trip.tsx
@@ -92,7 +94,6 @@ const App = () => {
       .typeError("Please enter a valid date!")
       .required("This field is required!")
       .min(Yup.ref("dateStart"), "Inocrrect end date!"),
-    type: Yup.string().required("Please select one of the available options!"),
     person: Yup.array().of(Yup.string()),
   });
 
@@ -110,8 +111,9 @@ const App = () => {
       data.destination,
       data.dateStart.toLocaleDateString(),
       data.dateEnd.toLocaleDateString(),
-      data.tripType
+      selected
     );
+    setSelected("Beach & Relaxation");
     reset();
   };
 
@@ -163,19 +165,18 @@ const App = () => {
             </div>
             <label htmlFor="tripType">Trip type: </label>
             <select
+              defaultValue={"Beach & Relaxation"}
+              onChange={(e) => setSelected(e.target.value)}
               className="custom-select form-control mt-1"
-              placeholder="Hej"
-              {...register("type")}
             >
-              <option>Beach & Relaxation</option>
-              <option>Active</option>
-              <option>City Breaks</option>
-              <option>Culture & History</option>
-              <option>Cycling</option>
-              <option>Expedition cruising</option>
-              <option>Escorted</option>
+              <option value="Beach & Relaxation">Beach & Relaxation</option>
+              <option value="Active">Active</option>
+              <option value="City Breaks">City Breaks</option>
+              <option value="Culture & History">Culture & History</option>
+              <option value="Cycling">Cycling</option>
+              <option value="Expedition cruising">Expedition cruising</option>
+              <option value="Escorted">Escorted</option>
             </select>
-            <p className="errorText">{errors.type?.message?.toString()}</p>
             <div className="d-flex justify-content-center">
               <button type="submit" className="btn w-100">
                 Confirm
@@ -225,7 +226,6 @@ const App = () => {
                   item.dateEnd.toUpperCase().includes(search!.toUpperCase())
               )
               .map((item: tripData, i: any) => {
-                console.log(Date.parse(item.dateStart));
                 return (
                   <Trip
                     key={i}

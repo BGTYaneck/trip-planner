@@ -22,6 +22,7 @@ type Props = {
 const Trip = (props: Props) => {
   const [show, setShow] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [selected, setSelected] = useState(props.trip.type);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -120,6 +121,7 @@ const Trip = (props: Props) => {
     object!.destination = data.destination;
     object!.dateStart = data.dateStart.toLocaleDateString();
     object!.dateEnd = data.dateEnd.toLocaleDateString();
+    object!.type = selected;
     props.setTripsList(newList);
     resetEdit({
       destination: props.trip.destination,
@@ -181,6 +183,19 @@ const Trip = (props: Props) => {
                   {errorsEdit.destination?.message?.toString()}
                 </p>
               </div>
+              <select
+                defaultValue={props.trip.type}
+                onChange={(e) => setSelected(e.target.value)}
+                className="custom-select form-control mt-1 align-self-baseline d-flex"
+              >
+                <option value="Beach & Relaxation">Beach & Relaxation</option>
+                <option value="Active">Active</option>
+                <option value="City Breaks">City Breaks</option>
+                <option value="Culture & History">Culture & History</option>
+                <option value="Cycling">Cycling</option>
+                <option value="Expedition cruising">Expedition cruising</option>
+                <option value="Escorted">Escorted</option>
+              </select>
               <OverlayTrigger
                 placement="bottom"
                 overlay={
@@ -241,7 +256,12 @@ const Trip = (props: Props) => {
         ) : (
           <div className="d-flex flex-wrap align-items-center justify-content-between">
             <div className="d-flex flex-row gap-2 fw-bold align-items-center justify-center">
-              <h3>🌇{props.trip.destination} </h3>
+              <h3>
+                🌇{props.trip.destination}{" "}
+                <span className="opacity-50 h-6" style={{ fontSize: "16px" }}>
+                  {props.trip.type}
+                </span>
+              </h3>
               <OverlayTrigger
                 placement="bottom"
                 overlay={
