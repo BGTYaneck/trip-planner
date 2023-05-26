@@ -20,6 +20,7 @@ const App = () => {
   );
 
   const [showToast, setShowToast] = useState(false);
+  const [filter, setFilter] = useState("No filter");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState("Beach & Relaxation");
   const [show, setShow] = useState(false);
@@ -185,32 +186,79 @@ const App = () => {
           </form>
         </Modal.Body>
       </Modal>
-      <div className="d-flex flex-row justify-content-center align-self-center gap-3">
-        <input
-          className="form-control"
-          type="text"
-          placeholder="🔎 Search..."
+      <div className="d-flex flex-column justify-content-center align-self-center gap-3">
+        <div className="d-flex gap-3">
+          <input
+            className="form-control"
+            type="text"
+            placeholder="🔎 Search..."
+            style={{ width: "20rem" }}
+            //@ts-ignore
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <OverlayTrigger
+            placement="bottom"
+            overlay={
+              <Tooltip id="tooltip" style={{ position: "fixed" }}>
+                <strong>Add a trip</strong>
+              </Tooltip>
+            }
+          >
+            <div className="d-flex flex-row gap-5 align-self-center">
+              <button onClick={() => handleShow()}>
+                <IconPlus />
+              </button>
+            </div>
+          </OverlayTrigger>
+        </div>
+        <select
           //@ts-ignore
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <OverlayTrigger
-          placement="bottom"
-          overlay={
-            <Tooltip id="tooltip" style={{ position: "fixed" }}>
-              <strong>Add a trip</strong>
-            </Tooltip>
-          }
+          onChange={(e) => setFilter(e.target.value)}
+          className="custom-select form-control mt-1 align-self-baseline d-flex"
         >
-          <div className="d-flex flex-row gap-5 align-self-center">
-            <button onClick={() => handleShow()}>
-              <IconPlus />
-            </button>
-          </div>
-        </OverlayTrigger>
+          <option value="No filter">No filter</option>
+          <option value="Beach & Relaxation">Beach & Relaxation</option>
+          <option value="Active">Active</option>
+          <option value="City Breaks">City Breaks</option>
+          <option value="Culture & History">Culture & History</option>
+          <option value="Cycling">Cycling</option>
+          <option value="Expedition cruising">Expedition cruising</option>
+          <option value="Escorted">Escorted</option>
+        </select>
       </div>
       <div className="d-flex flex-column gap-2">
         {list.length != 0 ? (
-          search != "" ? (
+          filter !== "No filter" ? (
+            list
+              .filter(
+                (item: tripData) =>
+                  (item.destination
+                    .toUpperCase()
+                    //@ts-ignore
+                    .includes(search!.toUpperCase()) ||
+                    //@ts-ignore
+                    item.dateStart
+                      .toUpperCase()
+                      .includes(search!.toUpperCase()) ||
+                    //@ts-ignore
+                    item.dateEnd
+                      .toUpperCase()
+                      .includes(search!.toUpperCase())) &&
+                  item.type == filter
+              )
+              .map((item: tripData, i: any) => {
+                return (
+                  <Trip
+                    key={i}
+                    id={item.id}
+                    trip={item}
+                    tripsList={list}
+                    setTripsList={sortTrips}
+                    handleRemove={() => handleRemove(item.id)}
+                  />
+                );
+              })
+          ) : (
             list
               .filter(
                 (item: tripData) =>
@@ -237,19 +285,6 @@ const App = () => {
                   />
                 );
               })
-          ) : (
-            list.map((item: tripData, i: any) => {
-              return (
-                <Trip
-                  key={i}
-                  id={item.id}
-                  trip={item}
-                  tripsList={list}
-                  setTripsList={sortTrips}
-                  handleRemove={() => handleRemove(item.id)}
-                />
-              );
-            })
           )
         ) : (
           <p className="text-center opacity-50">
