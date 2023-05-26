@@ -55,7 +55,12 @@ const App = () => {
 
   //Participants and items get added in Trip.tsx
   const empty: string[] = [];
-  function handleAdd(dest: string, start: string, end: string) {
+  function handleAdd(
+    dest: string,
+    start: string,
+    end: string,
+    tripType: string
+  ) {
     const highestId = Math.max(...list.map((o) => o.id), 0);
     const newList = [...list];
     newList.push({
@@ -63,6 +68,7 @@ const App = () => {
       destination: dest,
       dateStart: start,
       dateEnd: end,
+      type: tripType,
       persons: [{ itemsId: 0, person: "", items: empty }],
     });
     handleClose();
@@ -86,6 +92,7 @@ const App = () => {
       .typeError("Please enter a valid date!")
       .required("This field is required!")
       .min(Yup.ref("dateStart"), "Inocrrect end date!"),
+    type: Yup.string().required("Please select one of the available options!"),
     person: Yup.array().of(Yup.string()),
   });
 
@@ -102,7 +109,8 @@ const App = () => {
     handleAdd(
       data.destination,
       data.dateStart.toLocaleDateString(),
-      data.dateEnd.toLocaleDateString()
+      data.dateEnd.toLocaleDateString(),
+      data.tripType
     );
     reset();
   };
@@ -153,6 +161,21 @@ const App = () => {
                 </p>
               </div>
             </div>
+            <label htmlFor="tripType">Trip type: </label>
+            <select
+              className="custom-select form-control mt-1"
+              placeholder="Hej"
+              {...register("type")}
+            >
+              <option>Beach & Relaxation</option>
+              <option>Active</option>
+              <option>City Breaks</option>
+              <option>Culture & History</option>
+              <option>Cycling</option>
+              <option>Expedition cruising</option>
+              <option>Escorted</option>
+            </select>
+            <p className="errorText">{errors.type?.message?.toString()}</p>
             <div className="d-flex justify-content-center">
               <button type="submit" className="btn w-100">
                 Confirm
@@ -202,6 +225,7 @@ const App = () => {
                   item.dateEnd.toUpperCase().includes(search!.toUpperCase())
               )
               .map((item: tripData, i: any) => {
+                console.log(Date.parse(item.dateStart));
                 return (
                   <Trip
                     key={i}
@@ -210,6 +234,7 @@ const App = () => {
                     tripsList={list}
                     setTripsList={sortTrips}
                     handleRemove={() => handleRemove(item.id)}
+                    type={"WIP"}
                   />
                 );
               })
