@@ -1,5 +1,5 @@
 # trip-planner
-A trip planning app made with React Typescript and Bootstrap
+A trip planning app made using React, Typescript and Bootstrap
 
 Features:
 * Creating trips 
